@@ -1,4 +1,4 @@
-package gr.aueb.cf.new_models;
+package gr.aueb.cf.model;
 
 import java.util.ArrayList;
 import java.util.List;

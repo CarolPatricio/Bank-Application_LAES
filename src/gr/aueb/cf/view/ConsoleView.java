@@ -3,8 +3,8 @@ package gr.aueb.cf.view;
 import java.util.List;
 import java.util.Scanner;
 
-import gr.aueb.cf.model.Account;
-import gr.aueb.cf.model.Transaction;
+import gr.aueb.cf.model.Conta;
+import gr.aueb.cf.model.Transacao;
 
 public class ConsoleView {
     private Scanner scanner;
@@ -19,7 +19,7 @@ public class ConsoleView {
         System.out.println("2. Depósito");
         System.out.println("3. Saque");
         System.out.println("4. Ver Saldo");
-        System.out.println("5. Estado da Conta");
+        System.out.println("5. Extrato da Conta");
         System.out.println("0. Sair");
         System.out.print("Escolha uma opção: ");
     }
@@ -42,32 +42,30 @@ public class ConsoleView {
         return scanner.nextLine();
     }
 
-    public void printAccountStatement(Account account) {
+    public void printAccountStatement(Conta conta) {
         System.out.println("========================================");
         System.out.println("EXTRATO DA CONTA");
         System.out.println("========================================");
-        System.out.println("IBAN: " + account.getIban());
-        System.out.println("Titular: " + account.getHolder().getFirstName() + " " + account.getHolder().getLastName());
-        System.out.println("CPF: " + account.getHolder().getSsn());
-        System.out.println("Status: " + (account.isActive() ? "ATIVA" : "ENCERRADA"));
-        System.out.println(String.format("Saldo Atual: %.2f", account.getBalance()));
-        System.out.println(String.format("Saldo do Empréstimo: %.2f", account.getLoanBalance()));
-        System.out.println(String.format("Limite de Crédito: %.2f", account.getCreditLimit()));
+        System.out.println("IBAN: " + conta.getIban());
+        System.out.println("Titular: " + conta.getTitular().getPrimeiroNome() + " " + conta.getTitular().getSobrenome());
+        System.out.println("CPF: " + conta.getTitular().getCpf());
+        System.out.println("Status: " + (conta.isAtivo() ? "ATIVA" : "ENCERRADA"));
+        System.out.println(String.format("Saldo Atual: R$ %.2f", conta.getSaldo()));
         System.out.println("========================================");
         System.out.println("HISTÓRICO DE TRANSAÇÕES");
         System.out.println("========================================");
         
-        List<Transaction> history = account.getTransactionHistory();
-        if (history.isEmpty()) {
+        List<Transacao> historico = conta.getHistoricoTransacoes();
+        if (historico.isEmpty()) {
             System.out.println("Nenhuma transação registrada.");
         } else {
-            for (Transaction transaction : history) {
-                System.out.println(transaction.toString());
+            for (Transacao transacao : historico) {
+                System.out.println(transacao.toString());
             }
         }
         
         System.out.println("========================================");
-        System.out.println("Total de Transações: " + history.size());
+        System.out.println("Total de Transações: " + historico.size());
         System.out.println("========================================");
     }
 

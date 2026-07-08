@@ -1,18 +1,15 @@
 package gr.aueb.cf.controller;
 
-import gr.aueb.cf.model.Account;
-import gr.aueb.cf.model.User;
+import gr.aueb.cf.model.Conta;
+import gr.aueb.cf.model.Usuario;
 import gr.aueb.cf.view.ConsoleView;
-import gr.aueb.cf.exceptions.InsufficientAmountException;
-import gr.aueb.cf.exceptions.InsufficientBalanceException;
-import gr.aueb.cf.exceptions.SsnNotValidException;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class BankController {
 
-    private Map<String, Account> accounts = new HashMap<>();
+    private Map<String, Conta> contas = new HashMap<>();
     private ConsoleView view;
     private int ibanCounter = 1000;
 
@@ -59,61 +56,61 @@ public class BankController {
 
     private void handleCreateAccount() {
         view.displayMessage("\n--- Criar Nova Conta ---");
-        String firstName = view.getInput("Digite o Nome: ");
-        String lastName = view.getInput("Digite o Sobrenome: ");
-        String ssn = view.getInput("Digite o CPF: ");
-        double initialDeposit = view.getAmount("depósito inicial");
+        String primeiroNome = view.getInput("Digite o Nome: ");
+        String sobrenome = view.getInput("Digite o Sobrenome: ");
+        String cpf = view.getInput("Digite o CPF: ");
+        double depositoInicial = view.getAmount("depósito inicial");
         
-        User newUser = new User(firstName, lastName, ssn);
+        Usuario novoUsuario = new Usuario(primeiroNome, sobrenome, cpf);
         String iban = "GR" + (ibanCounter++);
-        Account newAccount = new Account(newUser, iban, initialDeposit);
+        Conta novaConta = new Conta(novoUsuario, iban, depositoInicial);
         
-        accounts.put(iban, newAccount);
+        contas.put(iban, novaConta);
         view.displayMessage("Conta criada com sucesso!");
-        view.displayMessage("AVISO: Salve seu IBAN -> " + iban);
+        view.displayMessage("AVISO: Salve seu IBAN para fazer operações -> " + iban);
     }
 
-    private void handleDeposit() throws InsufficientAmountException {
-        Account acc = getAccountByIban();
-        if (acc == null) return;
+    private void handleDeposit() {
+        Conta conta = getAccountByIban();
+        if (conta == null) return;
 
         double amount = view.getAmount("depósito");
-        acc.deposit(amount);
-        view.displayMessage("Depósito realizado com sucesso. Novo saldo: $" + acc.getBalance());
+        conta.depositar(amount);
+        view.displayMessage("Depósito realizado com sucesso. Novo saldo: R$ " + conta.getSaldo());
     }
 
-    private void handleWithdraw() throws InsufficientBalanceException, InsufficientAmountException, SsnNotValidException {
-        Account acc = getAccountByIban();
-        if (acc == null) return;
+    private void handleWithdraw() {
+        Conta conta = getAccountByIban();
+        if (conta == null) return;
 
-        String ssn = view.getInput("Digite seu CPF para validação de segurança: ");
+        String cpf = view.getInput("Digite seu CPF para validação de segurança: ");
         double amount = view.getAmount("saque");
 
-        acc.withdraw(amount, ssn);
-        view.displayMessage("Saque realizado com sucesso. Novo saldo: $" + acc.getBalance());
+        conta.sacar(amount, cpf);
+        view.displayMessage("Saque realizado com sucesso. Novo saldo: R$ " + conta.getSaldo());
     }
 
     private void handleCheckBalance() {
-        Account acc = getAccountByIban();
-        if (acc != null) {
-            view.displayMessage("Saldo atual da conta " + acc.getIban() + ": $" + acc.getBalance());
+        Conta conta = getAccountByIban();
+        if (conta != null) {
+            view.displayMessage("Saldo atual da conta " + conta.getIban() + ": R$ " + conta.getSaldo());
         }
     }
     
     private void handleStatement() {
-        Account acc = getAccountByIban();
-        if (acc != null) {
-            view.printAccountStatement(acc);
+        Conta conta = getAccountByIban();
+        if (conta != null) {
+            view.printAccountStatement(conta);
         }
     }
 
-    private Account getAccountByIban() {
+    private Conta getAccountByIban() {
         String iban = view.getInput("Digite o IBAN da conta: ");
-        Account acc = accounts.get(iban);
+        Conta conta = contas.get(iban);
         
-        if (acc == null) {
+        if (conta == null) {
             view.displayError("Conta com IBAN '" + iban + "' não encontrada.");
         }
-        return acc;
+        return conta;
     }
 }
