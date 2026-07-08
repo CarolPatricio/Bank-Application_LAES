@@ -198,13 +198,12 @@ public class Account extends IdentifiableEntity {
     //@   signals (IllegalStateException e) !isActive;
     public void deposit(double amount) throws InsufficientAmountException {
         if (!isActive) {
-            throw new IllegalStateException("Cannot perform operations on a closed account.");
+            throw new IllegalStateException("Não é possível realizar operações em uma conta encerrada.");
         }
         if(amount <= 0){
             throw new InsufficientAmountException(amount);
         }
         
-        double oldBalance = balance; 
         balance += amount;
         addTransaction(Transaction.TransactionType.DEPOSIT, amount, balance);
     }
@@ -259,25 +258,21 @@ public class Account extends IdentifiableEntity {
     public void withdraw(double amount, String ssn) 
             throws InsufficientBalanceException, InsufficientAmountException, SsnNotValidException {
         if (!isActive) {
-            throw new IllegalStateException("Cannot perform operations on a closed account.");
+            throw new IllegalStateException("Não é possível realizar operações em uma conta encerrada.");
         }
         if (amount <= 0) {
             throw new InsufficientAmountException(amount);
         }
-        if (ssn == null) {
+        if (!isSsnValid(ssn)) {
             throw new SsnNotValidException(ssn);
         }
         if (amount > balance && !(this instanceof OverdraftAccount) && !(this instanceof OverdraftJointAccount)) {
             throw new InsufficientBalanceException(balance, amount);
         }
         
-        double oldBalance = balance;
-        int oldTransactionCount = transactionHistory.size();
-        
         balance -= amount;
         addTransaction(Transaction.TransactionType.WITHDRAWAL, amount, balance);
     }
-
 
     /**
      * Requests a loan of a given amount.
@@ -399,7 +394,7 @@ public class Account extends IdentifiableEntity {
     public void repayLoan(double amount) throws InsufficientAmountException, InsufficientBalanceException {
         if (amount <= 0) throw new InsufficientAmountException(amount);
         if (amount > balance) throw new InsufficientBalanceException(balance, amount);
-        if (amount > loanBalance) throw new IllegalArgumentException("Repayment amount exceeds loan balance.");
+        if (amount > loanBalance) throw new IllegalArgumentException("O valor do pagamento excede o saldo do empréstimo.");
 
         balance -= amount;
         loanBalance -= amount;
@@ -454,23 +449,20 @@ public class Account extends IdentifiableEntity {
             if (amount <= 0) throw new InsufficientAmountException(amount);
 
             if (destinationAccount == null) {
-                throw new IllegalArgumentException("Destination account cannot be null.");
+                throw new IllegalArgumentException("A conta de destino não pode ser nula.");
             }
 
             if (this == destinationAccount) {
-                throw new IllegalArgumentException("Cannot transfer to the same account.");
+                throw new IllegalArgumentException("Não é possível transferir para a própria conta.");
             }
 
-            if (ssn == null) {
+            if (!isSsnValid(ssn)) {
                 throw new SsnNotValidException(ssn);
             }
 
             if (!(this instanceof OverdraftAccount) && amount > balance) {
                 throw new InsufficientBalanceException(this.balance, amount);
             }
-
-            double sourceOldBalance = balance;
-            double destOldBalance = destinationAccount.balance;
 
             balance -= amount;
             addTransaction(Transaction.TransactionType.TRANSFER_OUT, amount, balance);
@@ -491,15 +483,13 @@ public class Account extends IdentifiableEntity {
         return holder.getSsn().equals(ssn);
     }
 
-    // /**
-    //  * Closes the account. An account can only be closed if:
-    //  * - The balance is zero (or positive)
-    //  * - There are no outstanding loans
-    //  *
-    //  * @param ssn the social security number of the account holder
-    //  * @throws SsnNotValidException if the SSN is not valid
-    //  * @throws IllegalStateException if the account cannot be closed (has balance or loans)
-    //  */
+    /**
+     * Closes the account. An account can only be closed if:
+     * - The balance is zero (or positive)
+     * - There are no outstanding loans
+     *
+     * @throws IllegalStateException if the account cannot be closed (has balance or loans)
+     */
     //@ public normal_behavior
     //@   requires isActive;
     //@   requires balance == 0;
@@ -518,32 +508,30 @@ public class Account extends IdentifiableEntity {
     //@   signals (IllegalStateException);
     public void closeAccount() throws IllegalStateException {
         if (!isActive) {
-            throw new IllegalStateException("Account is already closed.");
+            throw new IllegalStateException("A conta já está encerrada.");
         }
         
         if (balance < 0) {
-            throw new IllegalStateException("Cannot close account with negative balance.");
+            throw new IllegalStateException("Não é possível encerrar uma conta com saldo negativo.");
         }
         
         if (loanBalance > 0) {
-            throw new IllegalStateException("Cannot close account with outstanding loan balance: " + loanBalance);
+            throw new IllegalStateException("Não é possível encerrar uma conta com saldo pendente de empréstimo: " + loanBalance);
         }
         if (balance > 0) {
-            throw new IllegalStateException("Cannot close account with remaining balance. Please withdraw " + balance + " first.");
+            throw new IllegalStateException("Não é possível encerrar uma conta com saldo. Por favor, saque " + balance + " primeiro.");
         }
         
         isActive = false;
         addTransaction(Transaction.TransactionType.WITHDRAWAL, 0, balance);
     }
 
-    // /**
-    //  * Updates the account holder's first name.
-    //  *
-    //  * @param newFirstName the new first name
-    //  * @param ssn the social security number for verification
-    //  * @throws SsnNotValidException if the SSN is not valid
-    //  * @throws IllegalStateException if account is closed
-    //  */
+    /**
+     * Updates the account holder's first name.
+     *
+     * @param newFirstName the new first name
+     * @throws IllegalStateException if account is closed
+     */
     //@ public normal_behavior
     //@   requires isActive;
     //@   requires holder != null;
@@ -556,20 +544,18 @@ public class Account extends IdentifiableEntity {
     //@   signals (IllegalStateException);
     public void updateHolderFirstName(String newFirstName) throws IllegalStateException {
         if (!isActive) {
-            throw new IllegalStateException("Cannot update data on a closed account.");
+            throw new IllegalStateException("Não é possível atualizar dados em uma conta encerrada.");
         }
 
         holder.setFirstName(newFirstName);
     }
 
-    // /**
-    //  * Updates the account holder's last name.
-    //  *
-    //  * @param newLastName the new last name
-    //  * @param ssn the social security number for verification
-    //  * @throws SsnNotValidException if the SSN is not valid
-    //  * @throws IllegalStateException if account is closed
-    //  */
+    /**
+     * Updates the account holder's last name.
+     *
+     * @param newLastName the new last name
+     * @throws IllegalStateException if account is closed
+     */
     //@ public normal_behavior
     //@   requires isActive;
     //@   requires holder != null;
@@ -582,20 +568,18 @@ public class Account extends IdentifiableEntity {
     //@   signals (IllegalStateException);
     public void updateHolderLastName(String newLastName) throws IllegalStateException {
         if (!isActive) {
-            throw new IllegalStateException("Cannot update data on a closed account.");
+            throw new IllegalStateException("Não é possível atualizar dados em uma conta encerrada.");
         }
         holder.setLastName(newLastName);
     }
 
-    // /**
-    //  * Updates the account holder's full name.
-    //  *
-    //  * @param newFirstName the new first name
-    //  * @param newLastName the new last name
-    //  * @param ssn the social security number for verification
-    //  * @throws SsnNotValidException if the SSN is not valid
-    //  * @throws IllegalStateException if account is closed
-    //  */
+    /**
+     * Updates the account holder's full name.
+     *
+     * @param newFirstName the new first name
+     * @param newLastName the new last name
+     * @throws IllegalStateException if account is closed
+     */
     //@ public normal_behavior
     //@   requires isActive;
     //@   requires holder != null;
@@ -610,87 +594,11 @@ public class Account extends IdentifiableEntity {
     //@   signals (IllegalStateException);
     public void updateHolderName(String newFirstName, String newLastName) throws IllegalStateException {
         if (!isActive) {
-            throw new IllegalStateException("Cannot update data on a closed account.");
+            throw new IllegalStateException("Não é possível atualizar dados em uma conta encerrada.");
         }
         holder.setFirstName(newFirstName);
         holder.setLastName(newLastName);
     }
-
-    // /**
-    //  * Generates a statement (extract) of the account showing all transactions.
-    //  *
-    //  * @return a formatted string containing the account statement
-    //  */
-    public /*@ pure skipesc @*/ String generateStatement() {
-        StringBuilder statement = new StringBuilder();
-        statement.append("========================================\n");
-        statement.append("ACCOUNT STATEMENT\n");
-        statement.append("========================================\n");
-        statement.append("IBAN: ").append(iban).append("\n");
-        statement.append("Holder: ").append(holder.getFirstName()).append(" ").append(holder.getLastName()).append("\n");
-        statement.append("SSN: ").append(holder.getSsn()).append("\n");
-        statement.append("Status: ").append(isActive ? "ACTIVE" : "CLOSED").append("\n");
-        statement.append("Current Balance: ").append(String.format("%.2f", balance)).append("\n");
-        statement.append("Loan Balance: ").append(String.format("%.2f", loanBalance)).append("\n");
-        statement.append("Credit Limit: ").append(String.format("%.2f", creditLimit)).append("\n");
-        statement.append("========================================\n");
-        statement.append("TRANSACTION HISTORY\n");
-        statement.append("========================================\n");
-        
-        if (transactionHistory.isEmpty()) {
-            statement.append("No transactions recorded.\n");
-        } else {
-            for (Transaction transaction : transactionHistory) {
-                statement.append(transaction.toString()).append("\n");
-            }
-        }
-        
-        statement.append("========================================\n");
-        statement.append("Total Transactions: ").append(transactionHistory.size()).append("\n");
-        statement.append("========================================\n");
-        
-        return statement.toString();
-    }
-
-    // /**
-    //  * Generates a statement for a specific date range.
-    //  *
-    //  * @param startDate the start date (inclusive)
-    //  * @param endDate the end date (inclusive)
-    //  * @return a formatted string containing the filtered statement
-    //  */
-    // //@ skipesc
-    // public String generateStatement(java.time.LocalDateTime startDate, java.time.LocalDateTime endDate) {
-    //     StringBuilder statement = new StringBuilder();
-    //     statement.append("========================================\n");
-    //     statement.append("ACCOUNT STATEMENT (FILTERED)\n");
-    //     statement.append("========================================\n");
-    //     statement.append("IBAN: ").append(iban).append("\n");
-    //     statement.append("Holder: ").append(holder.getFirstName()).append(" ").append(holder.getLastName()).append("\n");
-    //     statement.append("Period: ").append(startDate.toString()).append(" to ").append(endDate.toString()).append("\n");
-    //     statement.append("Current Balance: ").append(String.format("%.2f", balance)).append("\n");
-    //     statement.append("========================================\n");
-    //     statement.append("TRANSACTION HISTORY\n");
-    //     statement.append("========================================\n");
-        
-    //     int count = 0;
-    //     for (Transaction transaction : transactionHistory) {
-    //         if (!transaction.getDate().isBefore(startDate) && !transaction.getDate().isAfter(endDate)) {
-    //             statement.append(transaction.toString()).append("\n");
-    //             count++;
-    //         }
-    //     }
-        
-    //     if (count == 0) {
-    //         statement.append("No transactions found in the specified period.\n");
-    //     }
-        
-    //     statement.append("========================================\n");
-    //     statement.append("Filtered Transactions: ").append(count).append("\n");
-    //     statement.append("========================================\n");
-        
-    //     return statement.toString();
-    // }
 
     //@ public normal_behavior
     //@   requires type != null;
