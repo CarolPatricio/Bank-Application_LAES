@@ -1,4 +1,4 @@
-package gr.aueb.cf.new_models;
+package gr.aueb.cf.model;
 
 /**
  * A classe {@code Transacao} representa uma operação financeira em uma conta.
