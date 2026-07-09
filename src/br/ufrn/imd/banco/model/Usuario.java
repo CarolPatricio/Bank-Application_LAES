@@ -1,4 +1,4 @@
-package gr.aueb.cf.model;
+package br.ufrn.imd.banco.model;
 
 /**
  * A classe {@code Usuario} representa o titular de uma conta bancária.

@@ -1,4 +1,4 @@
-package gr.aueb.cf.model;
+package br.ufrn.imd.banco.model;
 
 /**
  * A classe {@code Transacao} representa uma operação financeira em uma conta.

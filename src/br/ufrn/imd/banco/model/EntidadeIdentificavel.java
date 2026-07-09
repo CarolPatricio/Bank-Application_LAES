@@ -1,5 +1,4 @@
-package gr.aueb.cf.model;
-
+package br.ufrn.imd.banco.model;
 /**
  * A classe {@code EntidadeIdentificavel} fornece um modelo base
  * para qualquer objeto do sistema que necessite de um identificador único.

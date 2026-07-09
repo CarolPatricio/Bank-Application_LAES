@@ -8,9 +8,9 @@ Além disso, o modelo de domínio principal utiliza a **Java Modeling Language (
 
 O sistema está devidamente desacoplado em três camadas principais para garantir uma separação clara de responsabilidades:
 
-* **Model (`gr.aueb.cf.new_models`):** Contém a lógica de negócio central, as entidades e a validação de estado. O modelo está escrito em português (`Conta`, `Usuario`, `Transacao`) e é fortemente anotado com contratos JML (pré-condições, pós-condições, invariantes de classe e restrições de modificação de estado) para garantir a correção matemática e das regras de negócio.
-* **View (`gr.aueb.cf.view`):** Contém a `ConsoleView`, que é a única camada responsável pela interação com o usuário. Ela lida com a leitura de entradas do scanner, exibição de menus e formatação de saídas visuais (como o extrato da conta) para a interface de linha de comando.
-* **Controller (`gr.aueb.cf.controller`):** Contém o `BankController`, que atua como orquestrador. Ele gerencia um "banco de dados" em memória contendo as contas, escuta as escolhas do usuário vindas da View e invoca as operações apropriadas no Model.
+* **Model (`br.ufrn.imd.banco.new_models`):** Contém a lógica de negócio central, as entidades e a validação de estado. O modelo está escrito em português (`Conta`, `Usuario`, `Transacao`) e é fortemente anotado com contratos JML (pré-condições, pós-condições, invariantes de classe e restrições de modificação de estado) para garantir a correção matemática e das regras de negócio.
+* **View (`br.ufrn.imd.banco.view`):** Contém a `ConsoleView`, que é a única camada responsável pela interação com o usuário. Ela lida com a leitura de entradas do scanner, exibição de menus e formatação de saídas visuais (como o extrato da conta) para a interface de linha de comando.
+* **Controller (`br.ufrn.imd.banco.controller`):** Contém o `BankController`, que atua como orquestrador. Ele gerencia um "banco de dados" em memória contendo as contas, escuta as escolhas do usuário vindas da View e invoca as operações apropriadas no Model.
 
 ## Descrição e Funcionalidades
 
@@ -34,7 +34,7 @@ Em vez de depender de exceções personalizadas, a nova arquitetura apoia-se em 
 O projeto pode ser executado usando qualquer IDE Java (como IntelliJ, Eclipse ou VS Code) ou a partir da linha de comando, compilando os arquivos Java e executando o ponto de entrada da aplicação.
 
 Para iniciar o console bancário interativo, execute o método main localizado em:
-`gr.aueb.cf.Main`
+`br.ufrn.imd.banco.Main`
 
 ## Verificação Formal com OpenJML
 
@@ -53,12 +53,12 @@ A verificação estática prova matematicamente a exatidão das regras de negóc
 
 #### Linux:
 ```bash
-~/openjml/openjml --esc --dir src/gr/aueb/cf/model/
+~/openjml/openjml --esc --dir src/br/ufrn/imd/banco/model/
 ```
 
 #### Windows:
 ```bash
-C:\openjml\openjml.bat --esc --dir src\gr\aueb\cf\model\
+C:\openjml\openjml.bat --esc --dir src\br\ufrn\imd\banco\model\
 ```
 (Se o comando terminar sem saída no terminal, significa que a lógica de negócio passou em todas as provas matemáticas do JML com 0 falhas).
 ### 3. Teste em Tempo de Execução (RAC - Runtime Assertion Checking)
@@ -73,13 +73,13 @@ Execute os comandos abaixo na ordem:
 mkdir -p bin
 
 # 2. Compile o projeto inteiro normalmente
-javac -d bin -sourcepath src src/gr/aueb/cf/Main.java
+javac -d bin -sourcepath src src/br/ufrn/imd/banco/Main.java
 
 # 3. Injete as verificações do JML apenas nos modelos
-~/openjml/openjml -rac -d bin --dir src/gr/aueb/cf/model/
+~/openjml/openjml -rac -d bin --dir src/br/ufrn/imd/banco/model/
 
 # 4. Execute a aplicação vinculando a biblioteca JML
-java -cp bin:~/openjml/jmlruntime.jar gr.aueb.cf.Main
+java -cp bin:~/openjml/jmlruntime.jar br.ufrn.imd.banco.Main
 ```
 
 #### Windows:
@@ -88,12 +88,12 @@ java -cp bin:~/openjml/jmlruntime.jar gr.aueb.cf.Main
 mkdir bin
 
 # 2. Compile o projeto inteiro normalmente
-javac -d bin -sourcepath src src\gr\aueb\cf\Main.java
+javac -d bin -sourcepath src src\br\ufrn\imd\banco\Main.java
 
 # 3. Injete as verificações do JML apenas nos modelos
-C:\openjml\openjml.bat -rac -d bin --dir src\gr\aueb\cf\model\
+C:\openjml\openjml.bat -rac -d bin --dir src\br\ufrn\imd\banco\model\
 
 # 4. Execute a aplicação vinculando a biblioteca JML
-java -cp "bin;C:\openjml\jmlruntime.jar" gr.aueb.cf.Main
+java -cp "bin;C:\openjml\jmlruntime.jar" br.ufrn.imd.banco.Main
 ```
 Com o RAC ativo, qualquer violação de regras (como tentar depositar um valor negativo) fará com que a aplicação lance automaticamente um JmlAssertionError, protegendo a integridade do sistema em tempo real.

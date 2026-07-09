@@ -1,10 +1,10 @@
-package gr.aueb.cf.view;
+package br.ufrn.imd.banco.view;
 
 import java.util.List;
 import java.util.Scanner;
 
-import gr.aueb.cf.model.Conta;
-import gr.aueb.cf.model.Transacao;
+import br.ufrn.imd.banco.model.Conta;
+import br.ufrn.imd.banco.model.Transacao;
 
 public class ConsoleView {
     private Scanner scanner;

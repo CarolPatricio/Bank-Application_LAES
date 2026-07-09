@@ -1,4 +1,4 @@
-package gr.aueb.cf.model;
+package br.ufrn.imd.banco.model;
 
 import java.util.ArrayList;
 import java.util.List;

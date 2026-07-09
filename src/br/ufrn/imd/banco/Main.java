@@ -1,7 +1,7 @@
-package gr.aueb.cf;
+package br.ufrn.imd.banco;
 
-import gr.aueb.cf.view.ConsoleView;
-import gr.aueb.cf.controller.BankController;
+import br.ufrn.imd.banco.view.ConsoleView;
+import br.ufrn.imd.banco.controller.BankController;
 
 public class Main {
     public static void main(String[] args) {
