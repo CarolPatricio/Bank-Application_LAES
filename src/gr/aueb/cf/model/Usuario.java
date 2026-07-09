@@ -101,7 +101,7 @@ public class Usuario extends EntidadeIdentificavel {
   public void setCpf(String cpf) {
     this.cpf = cpf;
   }
-
+  /*@ pure @*/
   @Override
   public /*@ skipesc @*/ String toString() {
     return "Usuario{" +

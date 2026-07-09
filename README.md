@@ -35,3 +35,65 @@ O projeto pode ser executado usando qualquer IDE Java (como IntelliJ, Eclipse ou
 
 Para iniciar o console bancário interativo, execute o método main localizado em:
 `gr.aueb.cf.Main`
+
+## Verificação Formal com OpenJML
+
+Este projeto utiliza o OpenJML para garantir que a lógica de negócios obedeça aos contratos matemáticos. Siga os passos abaixo para baixar a ferramenta e executar os testes na camada `Model`.
+
+### 1. Download do OpenJML
+1. Acesse a página de releases no GitHub: https://github.com/OpenJML/OpenJML/releases/latest
+
+2. Baixe o arquivo .zip com a marcação para o seu sistema operacional (ex: openjml-windows-21.x.xx.zip).
+
+3. Extraia o conteúdo do .zip para uma pasta na raiz do seu disco, ou qualquer outra pasta de sua preferência. 
+
+### 2. Teste Estático (ESC - Extended Static Checking)
+
+A verificação estática prova matematicamente a exatidão das regras de negócio sem executar a aplicação. Para verificar os modelos, execute o seguinte comando no terminal, substituindo o caminho pelo local onde você extraiu o OpenJML:
+
+#### Linux:
+```bash
+~/openjml/openjml --esc --dir src/gr/aueb/cf/model/
+```
+
+#### Windows:
+```bash
+C:\openjml\openjml.bat --esc --dir src\gr\aueb\cf\model\
+```
+(Se o comando terminar sem saída no terminal, significa que a lógica de negócio passou em todas as provas matemáticas do JML com 0 falhas).
+### 3. Teste em Tempo de Execução (RAC - Runtime Assertion Checking)
+
+Para testar a aplicação no console com as regras do JML ativas, é necessário compilar a aplicação inteira e depois injetar os testes especificamente nos Modelos (evitando avisos na View).
+
+Execute os comandos abaixo na ordem:
+
+#### Linux:
+```bash
+# 1. Crie o diretório de saída
+mkdir -p bin
+
+# 2. Compile o projeto inteiro normalmente
+javac -d bin -sourcepath src src/gr/aueb/cf/Main.java
+
+# 3. Injete as verificações do JML apenas nos modelos
+~/openjml/openjml -rac -d bin --dir src/gr/aueb/cf/model/
+
+# 4. Execute a aplicação vinculando a biblioteca JML
+java -cp bin:~/openjml/jmlruntime.jar gr.aueb.cf.Main
+```
+
+#### Windows:
+```bash
+# 1. Crie o diretório de saída
+mkdir bin
+
+# 2. Compile o projeto inteiro normalmente
+javac -d bin -sourcepath src src\gr\aueb\cf\Main.java
+
+# 3. Injete as verificações do JML apenas nos modelos
+C:\openjml\openjml.bat -rac -d bin --dir src\gr\aueb\cf\model\
+
+# 4. Execute a aplicação vinculando a biblioteca JML
+java -cp "bin;C:\openjml\jmlruntime.jar" gr.aueb.cf.Main
+```
+Com o RAC ativo, qualquer violação de regras (como tentar depositar um valor negativo) fará com que a aplicação lance automaticamente um JmlAssertionError, protegendo a integridade do sistema em tempo real.
