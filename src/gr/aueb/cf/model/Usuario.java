@@ -102,9 +102,8 @@ public class Usuario extends EntidadeIdentificavel {
     this.cpf = cpf;
   }
 
-  // @ skipesc
   @Override
-  public String toString() {
+  public /*@ skipesc @*/ String toString() {
     return "Usuario{" +
         "primeiroNome='" + primeiroNome + '\'' +
         ", sobrenome='" + sobrenome + '\'' +

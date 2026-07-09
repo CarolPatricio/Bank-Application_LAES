@@ -13,15 +13,21 @@ import java.util.List;
 public class Conta extends EntidadeIdentificavel {
 
   // @ spec_public
-  private Usuario titular;
+  private /*@ non_null @*/ final Usuario titular;
+  
   // @ spec_public
-  private String iban;
+  private /*@ non_null @*/ final String iban;
+  
   // @ spec_public
   private double saldo;
+  
   // @ spec_public
   private boolean ativo;
+  
   // @ spec_public
-  private List<Transacao> historicoTransacoes;
+  private /*@ non_null @*/ final List<Transacao> historicoTransacoes;
+
+  // @ public invariant saldo >= 0;
 
   // @ public invariant titular != null;
   // @ public invariant iban != null;
@@ -95,7 +101,7 @@ public class Conta extends EntidadeIdentificavel {
   // @ public normal_behavior
   // @ requires ativo;
   // @ requires valor > 0;
-  // @ assignable saldo, historicoTransacoes;
+  // @ assignable saldo, historicoTransacoes.*;
   // @ ensures saldo == \old(saldo) + valor;
   // @ also
   // @ public exceptional_behavior
@@ -135,7 +141,7 @@ public class Conta extends EntidadeIdentificavel {
   // @ requires valor > 0;
   // @ requires valor <= saldo;
   // @ requires cpf != null && titular.cpf.equals(cpf);
-  // @ assignable saldo, historicoTransacoes;
+  // @ assignable saldo, historicoTransacoes.*;
   // @ ensures saldo == \old(saldo) - valor;
   // @ also
   // @ public exceptional_behavior
@@ -186,8 +192,7 @@ public class Conta extends EntidadeIdentificavel {
   // @ requires valor <= saldo;
   // @ requires contaDestino != null && contaDestino != this &&
   // contaDestino.ativo;
-  // @ assignable saldo, historicoTransacoes, contaDestino.saldo,
-  // contaDestino.historicoTransacoes;
+  // @ assignable saldo, historicoTransacoes.*, contaDestino.saldo, contaDestino.historicoTransacoes.*;
   // @ ensures saldo == \old(saldo) - valor;
   // @ ensures contaDestino.saldo == \old(contaDestino.saldo) + valor;
   public void transferir(double valor, Conta contaDestino) {
@@ -246,7 +251,7 @@ public class Conta extends EntidadeIdentificavel {
   // @ public normal_behavior
   // @ requires type != null;
   // @ requires amount >= 0;
-  // @ assignable historicoTransacoes;
+  // @ assignable historicoTransacoes.*;
   public void adicionarTransacao(Transacao.TipoTransacao type, double amount, double balanceAfter) {
     historicoTransacoes.add(new Transacao(type, amount, balanceAfter));
   }

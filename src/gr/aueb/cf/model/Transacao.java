@@ -66,9 +66,8 @@ public class Transacao {
    *
    * @return string formatada da transação
    */
-  // @ skipesc
   @Override
-  public String toString() {
+  public /*@ skipesc @*/ String toString() {
     String sinal = (tipo == TipoTransacao.DEPOSITO ||
         tipo == TipoTransacao.TRANSFERENCIA_ENTRADA) ? "+" : "-";
 
