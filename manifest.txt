@@ -1,0 +1,1 @@
+Main-Class: br.ufrn.imd.banco.Main
