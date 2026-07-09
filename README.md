@@ -97,3 +97,40 @@ C:\openjml\openjml.bat -rac -d bin --dir src\br\ufrn\imd\banco\model\
 java -cp "bin;C:\openjml\jmlruntime.jar" br.ufrn.imd.banco.Main
 ```
 Com o RAC ativo, qualquer violação de regras (como tentar depositar um valor negativo) fará com que a aplicação lance automaticamente um JmlAssertionError, protegendo a integridade do sistema em tempo real.
+
+### 4. Geração e Execução do arquivo JAR executável
+Se desejar empacotar a aplicação inteira compilada (já contendo as asserções do OpenJML injetadas nos modelos), você pode exportá-la para um arquivo `.jar`.
+
+Execute os passos a partir da raiz do projeto:
+
+#### No Linux:
+```bash
+# 1. Crie o arquivo de manifesto apontando para a classe Main (deixe uma linha em branco no final)
+echo "Main-Class: br.ufrn.imd.banco.Main" > manifest.txt
+echo "" >> manifest.txt
+
+# 2. Gere o arquivo JAR a partir da pasta de binários compilados
+jar cvfm banco.jar manifest.txt -C bin/ .
+
+# 3. Remova o manifesto temporário
+rm manifest.txt
+
+# 4. Execute o JAR vinculando o runtime do JML necessário para os modelos
+java -cp banco.jar:~/openjml/jmlruntime.jar br.ufrn.imd.banco.Main
+```
+
+#### No Windows (Prompt de Comando):
+```DOS
+:: 1. Crie o arquivo de manifesto (certifique-se de salvar com uma linha em branco no final)
+echo Main-Class: br.ufrn.imd.banco.Main> manifest.txt
+echo.>> manifest.txt
+
+:: 2. Gere o arquivo JAR a partir da pasta de binários compilados
+jar cvfm banco.jar manifest.txt -C bin/ .
+
+:: 3. Remova o manifesto temporário
+del manifest.txt
+
+:: 4. Execute o JAR vinculando o runtime do JML necessário para os modelos
+java -cp "banco.jar;C:\openjml\jmlruntime.jar" br.ufrn.imd.banco.Main
+```
