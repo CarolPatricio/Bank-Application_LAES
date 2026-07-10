@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="760" viewBox="0 0 920 760" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#37474f"/>
+    </marker>
+    <marker id="arrowOpen" markerWidth="14" markerHeight="14" refX="11" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L11,5 L1,9" fill="none" stroke="#5c6bc0" stroke-width="1.6"/>
+    </marker>
+    <style>
+      .title  { font-size: 26px; font-weight: 700; fill: #1a3a6b; }
+      .layer  { font-size: 15px; font-weight: 700; letter-spacing: 1px; }
+      .cls    { font-size: 15px; font-weight: 700; }
+      .desc   { font-size: 11.5px; }
+      .rel    { font-size: 11px; font-style: italic; fill: #37474f; }
+      .pkg    { font-size: 11px; fill: #78909c; }
+    </style>
+  </defs>
+
+  <!-- fundo -->
+  <rect x="0" y="0" width="920" height="760" fill="#ffffff"/>
+
+  <!-- titulo -->
+  <text x="460" y="42" text-anchor="middle" class="title">Arquitetura MVC — Sistema Bancário</text>
+  <text x="460" y="64" text-anchor="middle" class="pkg">pacote raiz: br.ufrn.imd.banco</text>
+
+  <!-- ===================== MAIN ===================== -->
+  <rect x="310" y="88" width="300" height="60" rx="10" fill="#eceff1" stroke="#607d8b" stroke-width="1.5"/>
+  <text x="460" y="112" text-anchor="middle" class="cls" fill="#37474f">Main.java</text>
+  <text x="460" y="132" text-anchor="middle" class="desc" fill="#546e7a">ponto de entrada · instancia View e Controller · start()</text>
+
+  <!-- seta Main -> Controller -->
+  <line x1="460" y1="148" x2="460" y2="182" stroke="#37474f" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+  <!-- ===================== CONTROLLER ===================== -->
+  <rect x="230" y="184" width="460" height="92" rx="10" fill="#e3f2fd" stroke="#1976d2" stroke-width="2"/>
+  <text x="250" y="206" class="layer" fill="#1565c0">CONTROLLER</text>
+  <text x="250" y="230" class="cls" fill="#0d47a1">BankController.java</text>
+  <text x="250" y="250" class="desc" fill="#37474f">• Orquestra o fluxo (menu / switch)</text>
+  <text x="250" y="267" class="desc" fill="#37474f">• "Banco de dados" em memória: Map&lt;String, Conta&gt; · gera IBANs</text>
+
+  <!-- setas Controller -> View / Model -->
+  <line x1="330" y1="276" x2="200" y2="330" stroke="#37474f" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <line x1="590" y1="276" x2="640" y2="330" stroke="#37474f" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+  <!-- ===================== VIEW ===================== -->
+  <rect x="40" y="332" width="300" height="150" rx="10" fill="#f3e5f5" stroke="#8e24aa" stroke-width="2"/>
+  <text x="60" y="356" class="layer" fill="#6a1b9a">VIEW</text>
+  <text x="60" y="380" class="cls" fill="#4a148c">ConsoleView.java</text>
+  <text x="60" y="404" class="desc" fill="#37474f">• Lê entradas (Scanner)</text>
+  <text x="60" y="424" class="desc" fill="#37474f">• Exibe menus</text>
+  <text x="60" y="444" class="desc" fill="#37474f">• Formata extratos e mensagens</text>
+  <text x="60" y="470" class="pkg">sem anotações JML</text>
+
+  <!-- ===================== MODEL ===================== -->
+  <rect x="380" y="332" width="500" height="386" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="400" y="356" class="layer" fill="#1b5e20">MODEL</text>
+  <text x="864" y="356" text-anchor="end" class="pkg">regras de negócio + contratos JML</text>
+
+  <!-- EntidadeIdentificavel -->
+  <rect x="500" y="374" width="260" height="52" rx="8" fill="#ffffff" stroke="#388e3c" stroke-width="1.6"/>
+  <text x="630" y="396" text-anchor="middle" class="cls" fill="#1b5e20">EntidadeIdentificavel</text>
+  <text x="630" y="414" text-anchor="middle" class="desc" fill="#546e7a">id único · invariant id ≥ 0 · constraint imutável</text>
+
+  <!-- heranca lines (Usuario e Conta -> Entidade) triangulo -->
+  <line x1="470" y1="486" x2="560" y2="428" stroke="#5c6bc0" stroke-width="1.6" marker-end="url(#arrowOpen)"/>
+  <line x1="630" y1="486" x2="655" y2="428" stroke="#5c6bc0" stroke-width="1.6" marker-end="url(#arrowOpen)"/>
+  <text x="500" y="452" class="rel" fill="#5c6bc0">estende</text>
+
+  <!-- Usuario -->
+  <rect x="400" y="488" width="200" height="86" rx="8" fill="#ffffff" stroke="#388e3c" stroke-width="1.6"/>
+  <text x="500" y="510" text-anchor="middle" class="cls" fill="#1b5e20">Usuario</text>
+  <text x="500" y="530" text-anchor="middle" class="desc" fill="#546e7a">titular da conta</text>
+  <text x="500" y="547" text-anchor="middle" class="desc" fill="#546e7a">nome · sobrenome · cpf</text>
+  <text x="500" y="564" text-anchor="middle" class="desc" fill="#546e7a">invariants: não-nulos</text>
+
+  <!-- Conta -->
+  <rect x="640" y="488" width="210" height="86" rx="8" fill="#ffffff" stroke="#388e3c" stroke-width="1.6"/>
+  <text x="745" y="510" text-anchor="middle" class="cls" fill="#1b5e20">Conta</text>
+  <text x="745" y="530" text-anchor="middle" class="desc" fill="#546e7a">depositar · sacar · transferir</text>
+  <text x="745" y="547" text-anchor="middle" class="desc" fill="#546e7a">encerrarConta</text>
+  <text x="745" y="564" text-anchor="middle" class="desc" fill="#546e7a">invariant: saldo ≥ 0</text>
+
+  <!-- Conta -> Usuario (titular) -->
+  <line x1="640" y1="531" x2="600" y2="531" stroke="#37474f" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="620" y="524" text-anchor="middle" class="rel">titular</text>
+
+  <!-- Transacao -->
+  <rect x="640" y="620" width="210" height="80" rx="8" fill="#ffffff" stroke="#388e3c" stroke-width="1.6"/>
+  <text x="745" y="642" text-anchor="middle" class="cls" fill="#1b5e20">Transacao</text>
+  <text x="745" y="662" text-anchor="middle" class="desc" fill="#546e7a">registro imutável (pure)</text>
+  <text x="745" y="679" text-anchor="middle" class="desc" fill="#546e7a">tipo · valor · saldoApos</text>
+  <text x="745" y="694" text-anchor="middle" class="desc" fill="#546e7a">invariant: valor ≥ 0</text>
+
+  <!-- Conta -> Transacao (historico) -->
+  <line x1="745" y1="574" x2="745" y2="618" stroke="#37474f" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="800" y="600" text-anchor="middle" class="rel">histórico *</text>
+
+  <!-- legenda de setas -->
+  <g transform="translate(60, 640)">
+    <text x="0" y="0" class="pkg" font-weight="700" fill="#455a64">Legenda</text>
+    <line x1="0" y1="18" x2="30" y2="18" stroke="#37474f" stroke-width="1.8" marker-end="url(#arrow)"/>
+    <text x="38" y="22" class="pkg">usa / associação</text>
+    <line x1="0" y1="42" x2="30" y2="42" stroke="#5c6bc0" stroke-width="1.6" marker-end="url(#arrowOpen)"/>
+    <text x="38" y="46" class="pkg">herança (estende)</text>
+    <rect x="0" y="60" width="14" height="14" fill="#e8f5e9" stroke="#2e7d32"/>
+    <text x="20" y="72" class="pkg">camada verificada com JML</text>
+  </g>
+</svg>
